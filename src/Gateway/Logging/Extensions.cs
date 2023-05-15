@@ -9,32 +9,30 @@ public static class Extensions
 {
     public static WebApplicationBuilder RegisterSerilog(this WebApplicationBuilder builder)
     {
-        var loggerSettings = builder.Services.BindValidateReturn<LoggerSettings>(builder.Configuration);
-        _ = builder.Host.UseSerilog((_, sp, serilogConfig) =>
+        var appOptions     = builder.Services.BindValidateReturn<AppOptions>(builder.Configuration);
+        var serilogOptions = builder.Services.BindValidateReturn<SerilogOptions>(builder.Configuration);
+        _ = builder.Host.UseSerilog((_, _, serilogConfig) =>
         {
-            var appName                  = loggerSettings.AppName;
-            var seqUrl                   = loggerSettings.SeqUrl;
-            var structuredConsoleLogging = loggerSettings.StructuredConsoleLogging;
-            var minLogLevel              = loggerSettings.MinimumLogLevel;
+            if (serilogOptions.EnableErichers) serilogConfig.ConfigureEnrichers(appOptions.Name);
+            serilogConfig
+                .ConfigureConsoleLogging(serilogOptions.StructuredConsoleLogging)
+                .ConfigureSeq(serilogOptions.SeqUrl)
+                .SetMinimumLogLevel(serilogOptions.MinimumLogLevel);
+            if (serilogOptions.OverideMinimumLogLevel) serilogConfig.OverideMinimumLogLevel();
 
-            serilogConfig.ConfigureEnrichers(appName)
-                .ConfigureConsoleLogging(structuredConsoleLogging)
-                .ConfigureSeq(seqUrl)
-                .SetMinimumLogLevel(minLogLevel)
-                .OverideMinimumLogLevel();
-
-            PrintAppName(appName);
+            PrintAppName(appOptions.Name);
         });
 
         return builder;
     }
 
-    private static LoggerConfiguration ConfigureEnrichers(this LoggerConfiguration serilogConfig, string appName) =>
+    private static void ConfigureEnrichers(this LoggerConfiguration serilogConfig, string appName)
+    {
         serilogConfig
             .Enrich.FromLogContext()
             .Enrich.WithProperty("Application", appName)
-            .Enrich.WithExceptionDetails()
-            .Enrich.FromLogContext();
+            .Enrich.WithExceptionDetails();
+    }
 
     private static LoggerConfiguration ConfigureSeq(this LoggerConfiguration serilogConfig, string serverUrl) =>
         string.IsNullOrEmpty(serverUrl) ? serilogConfig : serilogConfig.WriteTo.Seq(serverUrl);
@@ -44,6 +42,21 @@ public static class Extensions
             ? serilogConfig.WriteTo.Async(wt => wt.Console(new CompactJsonFormatter()))
             : serilogConfig.WriteTo.Async(wt => wt.Console());
 
+    private static void SetMinimumLogLevel(this LoggerConfiguration serilogConfig, string minLogLevel)
+    {
+        var loggingLevelSwitch = new LoggingLevelSwitch
+        {
+            MinimumLevel = minLogLevel.ToLower() switch
+            {
+                "debug"       => LogEventLevel.Debug,
+                "information" => LogEventLevel.Information,
+                "warning"     => LogEventLevel.Warning,
+                _             => LogEventLevel.Information
+            }
+        };
+        serilogConfig.MinimumLevel.ControlledBy(loggingLevelSwitch);
+    }
+
     private static void OverideMinimumLogLevel(this LoggerConfiguration serilogConfig)
     {
         serilogConfig
@@ -52,15 +65,6 @@ public static class Extensions
             .MinimumLevel.Override("Yarp", LogEventLevel.Information)
             .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information);
     }
-
-    private static LoggerConfiguration SetMinimumLogLevel(this LoggerConfiguration serilogConfig, string minLogLevel) =>
-        minLogLevel.ToLower() switch
-        {
-            "debug"       => serilogConfig.MinimumLevel.Debug(),
-            "information" => serilogConfig.MinimumLevel.Information(),
-            "warning"     => serilogConfig.MinimumLevel.Warning(),
-            _             => serilogConfig.MinimumLevel.Information()
-        };
 
     private static void PrintAppName(string text)
     {

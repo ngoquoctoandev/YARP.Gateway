@@ -1,8 +1,9 @@
 {
-  "LoggerSettings": {
-    "AppName": "YARP.Gateway",
+  "SerilogOptions": {
     "SeqUrl": "http://localhost:5341",
+    "EnableErichers": true,
     "StructuredConsoleLogging": false,
+    "OverideMinimumLogLevel": true,
     "MinimumLogLevel": "Information"
   }
 }
