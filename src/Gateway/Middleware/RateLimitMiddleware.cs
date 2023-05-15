@@ -1,13 +1,14 @@
-﻿namespace YARP.Gateway.Middleware;
+﻿using YARP.Gateway.Options;
+
+namespace YARP.Gateway.Middleware;
 
 public static class RateLimitMiddleware
 {
-    internal static IServiceCollection AddRateLimiting(this IServiceCollection services)
+    internal static IServiceCollection AddRateLimiting(this IServiceCollection services, IConfiguration configuration)
     {
+        var limiterSettings = services.BindValidateReturn<RateLimitSettings>(configuration);
         services.AddRateLimiter(options =>
         {
-            var limiterSettings = services.BuildServiceProvider().GetRequiredService<IOptions<RateLimitSettings>>().Value;
-
             const string message        = "The %s user policy must be configured in the appsettings.json file.";
             var          anonymousUser  = limiterSettings.UserPolicy.SingleOrDefault(x => x.Name == RateLimitPolicy.Anonymous)  ?? throw new Exception(message.Replace("%s", RateLimitPolicy.Anonymous));
             var          registeredUser = limiterSettings.UserPolicy.SingleOrDefault(x => x.Name == RateLimitPolicy.Registered) ?? throw new Exception(message.Replace("%s", RateLimitPolicy.Registered));

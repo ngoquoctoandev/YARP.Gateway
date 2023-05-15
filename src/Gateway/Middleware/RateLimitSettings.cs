@@ -1,6 +1,8 @@
-﻿namespace YARP.Gateway.Middleware;
+﻿using YARP.Gateway.Options;
 
-public class RateLimitSettings
+namespace YARP.Gateway.Middleware;
+
+public class RateLimitSettings : IOptionsRoot
 {
     [Required] public bool                  Enabled               { get; set; }
     public            QuotaExceededResponse QuotaExceededResponse { get; set; } = new();

@@ -1,10 +1,12 @@
-﻿namespace YARP.Gateway.HostSettings;
+﻿using YARP.Gateway.Options;
+
+namespace YARP.Gateway.HostSettings;
 
 public static class WebHostSettings
 {
     public static WebApplicationBuilder ConfigureWebHost(this WebApplicationBuilder builder)
     {
-        var kestrelSettings = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<KestrelSettings>>().Value;
+        var kestrelSettings = builder.Services.BindValidateReturn<KestrelSettings>(builder.Configuration);
 
         Dictionary<string, X509Certificate2> certs = new();
         foreach (var cert in kestrelSettings.Certificates)

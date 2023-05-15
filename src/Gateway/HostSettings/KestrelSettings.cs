@@ -1,6 +1,8 @@
-﻿namespace YARP.Gateway.HostSettings;
+﻿using YARP.Gateway.Options;
 
-public class KestrelSettings
+namespace YARP.Gateway.HostSettings;
+
+public class KestrelSettings : IOptionsRoot
 {
     [Range(0, 65535)] public int               HttpsPort          { get; init; } = 443;
     [Range(0, 65535)] public int               HttpPort           { get; init; } = 80;

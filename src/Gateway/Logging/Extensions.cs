@@ -1,6 +1,7 @@
 using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Formatting.Compact;
+using YARP.Gateway.Options;
 
 namespace YARP.Gateway.Logging;
 
@@ -8,9 +9,9 @@ public static class Extensions
 {
     public static WebApplicationBuilder RegisterSerilog(this WebApplicationBuilder builder)
     {
+        var loggerSettings = builder.Services.BindValidateReturn<LoggerSettings>(builder.Configuration);
         _ = builder.Host.UseSerilog((_, sp, serilogConfig) =>
         {
-            var loggerSettings           = sp.GetRequiredService<IOptions<LoggerSettings>>().Value;
             var appName                  = loggerSettings.AppName;
             var seqUrl                   = loggerSettings.SeqUrl;
             var structuredConsoleLogging = loggerSettings.StructuredConsoleLogging;

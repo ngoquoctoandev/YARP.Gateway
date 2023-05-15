@@ -9,7 +9,7 @@ try
     var builder = WebApplication.CreateBuilder(args);
     builder.AddConfigurations().RegisterSerilog().ConfigureWebHost();
     builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-    builder.Services.AddRateLimiting().AddCorsPolicy();
+    builder.Services.AddRateLimiting(builder.Configuration).AddCorsPolicy(builder.Configuration);
     builder.Services.AddHealthChecks().AddCheck<ReverseProxyHealthCheck>("ReverseProxyHealthCheck");
 
     var app = builder.Build();

@@ -1,12 +1,14 @@
-﻿namespace YARP.Gateway.Cors;
+﻿using YARP.Gateway.Options;
+
+namespace YARP.Gateway.Cors;
 
 internal static class Startup
 {
     private const string CorsPolicy = nameof(CorsPolicy);
 
-    internal static IServiceCollection AddCorsPolicy(this IServiceCollection services)
+    internal static IServiceCollection AddCorsPolicy(this IServiceCollection services, IConfiguration configuration)
     {
-        var          corsSettings = services.BuildServiceProvider().GetRequiredService<IOptions<CorsSettings>>().Value;
+        var          corsSettings = services.BindValidateReturn<CorsSettings>(configuration);
         List<string> origins      = new();
         if (corsSettings.Angular is not null)
             origins.AddRange(corsSettings.Angular.Split(';', StringSplitOptions.RemoveEmptyEntries));

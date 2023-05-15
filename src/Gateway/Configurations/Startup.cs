@@ -22,12 +22,6 @@ internal static class Startup
             .AddJsonFile($"{ConfigurationsDirectory}/ratelimiting.{env.EnvironmentName}.json", true, true)
             .AddEnvironmentVariables();
 
-        builder.Services.AddOptions<LoggerSettings>().BindConfiguration(nameof(LoggerSettings))
-            .Services.AddOptions<KestrelSettings>().BindConfiguration(nameof(KestrelSettings))
-            .Services.AddOptions<CorsSettings>().BindConfiguration(nameof(CorsSettings))
-            .Services.AddOptions<RateLimitSettings>().BindConfiguration(nameof(RateLimitSettings))
-            .ValidateDataAnnotations().ValidateOnStart();
-
         return builder;
     }
 }
