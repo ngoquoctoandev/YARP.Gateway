@@ -1,0 +1,34 @@
+{
+  "RateLimitSettings": {
+    "Enabled": true,
+    "QuotaExceededResponse": {
+      "Message": "Too many requests. Please try again later.",
+      "MessageRetryAfter": "You have reached the maximum permitted number of requests. Please try again after %s minute(s).",
+      "StatusCode": 429
+    },
+    "GlobalLimiter": {
+      "Name": "All",
+      "PermitLimit": 500,
+      "QueueLimit": 20,
+      "Window": 60
+    },
+    "UserPolicy": [
+      {
+        "Name": "Anonymous",
+        "PermitLimit": 20,
+        "QueueLimit": 0,
+        "Window": 60,
+        "SegmentsPerWindow": 2,
+        "AutoReplenishment": true
+      },
+      {
+        "Name": "Registered",
+        "PermitLimit": 10,
+        "QueueLimit": 5,
+        "Window": 60,
+        "SegmentsPerWindow": 2,
+        "AutoReplenishment": true
+      }
+    ]
+  }
+}

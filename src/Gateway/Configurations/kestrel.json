@@ -1,0 +1,20 @@
+{
+  "KestrelSettings": {
+    "HttpsPort": 7979,
+    "HttpPort": 8989,
+    "MaxRequestBodySize": 10,
+    "Protocols": "Http1AndHttp2AndHttp3",
+    "Certificates": [
+      {
+        "Domain": "localhost",
+        "Path": "./cert/localhost.pfx",
+        "Password": "0902889989"
+      },
+      {
+        "Domain": "giaimathanso.com",
+        "Path": "./cert/giaimathanso.com.pfx",
+        "Password": "S3cretP@$$w0rd!"
+      }
+    ]
+  }
+}

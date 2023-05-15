@@ -1,0 +1,8 @@
+{
+  "LoggerSettings": {
+    "AppName": "YARP.Gateway",
+    "SeqUrl": "http://localhost:5341",
+    "StructuredConsoleLogging": false,
+    "MinimumLogLevel": "Information"
+  }
+}
