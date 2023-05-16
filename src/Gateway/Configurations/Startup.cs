@@ -20,6 +20,8 @@ internal static class Startup
             .AddJsonFile($"{ConfigurationsDirectory}/cors.{env.EnvironmentName}.json", true, true)
             .AddJsonFile($"{ConfigurationsDirectory}/ratelimiting.json", false, true)
             .AddJsonFile($"{ConfigurationsDirectory}/ratelimiting.{env.EnvironmentName}.json", true, true)
+            .AddJsonFile($"{ConfigurationsDirectory}/security.json", false, true)
+            .AddJsonFile($"{ConfigurationsDirectory}/security.{env.EnvironmentName}.json", true, true)
             .AddEnvironmentVariables();
 
         return builder;

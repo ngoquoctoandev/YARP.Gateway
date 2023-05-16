@@ -1,4 +1,5 @@
 ﻿using YARP.Gateway;
+using YARP.Gateway.Auth;
 
 StaticLogger.EnsureInitialized();
 Log.Information("Server Booting Up...");
@@ -11,22 +12,15 @@ try
     builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
     builder.Services.AddRateLimiting(builder.Configuration).AddCorsPolicy(builder.Configuration);
     builder.Services.AddHealthChecks().AddCheck<ReverseProxyHealthCheck>("ReverseProxyHealthCheck");
+    builder.Services.AddAuth(builder.Configuration);
 
     var app = builder.Build();
 
-    app.MapGet("/", async context =>
-    {
-        var body = new
-        {
-            ConnectionId = context.Connection.Id,
-            IP           = context.GetIpAddress(),
-            Timestamp    = DateTimeOffset.Now,
-            Message      = "YARP reverse proxy. Made by ngoquoctoandev with 💜"
-        };
-        await context.Response.WriteAsJsonAsync(body);
-    }).RequireRateLimiting(RateLimitPolicy.Sliding);
-
-    app.UseRateLimiter().UseCorsPolicy();
+    app.UseEndpoints();
+    app.UseRouting()
+        .UseAuth()
+        .UseRateLimiter()
+        .UseCorsPolicy();
     app.MapHealthChecks("/health");
     app.MapReverseProxy();
 

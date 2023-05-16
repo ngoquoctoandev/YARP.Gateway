@@ -27,7 +27,7 @@
         "LoadBalancingPolicy": "PowerOfTwoChoices",
         "Destinations": {
           "http/destination": {
-            "Address": "http://localhost:5000/api/"
+            "Address": "http://host.docker.internal:5000/api/"
           }
         }
       },
@@ -35,8 +35,8 @@
         "LoadBalancingPolicy": "PowerOfTwoChoices",
         "Destinations": {
           "http/destination": {
-            "Address": "http://localhost:5000/api/v1",
-            "Health": "http://localhost:5000/"
+            "Address": "http://host.docker.internal:5000/api/v1",
+            "Health": "http://host.docker.internal:5000/"
           }
         },
         "HealthCheck": {
