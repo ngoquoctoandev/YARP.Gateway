@@ -13,5 +13,5 @@ public static class Endpoints
             Message      = "YARP reverse proxy. Made by ngoquoctoandev with 💜"
         };
         await context.Response.WriteAsJsonAsync(body);
-    }).RequireRateLimiting(RateLimitPolicy.Sliding);
+    }).RequireRateLimiting(RateLimitPolicy.User);
 }

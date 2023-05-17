@@ -27,10 +27,12 @@ public static class RateLimitMiddleware
 
             options.GlobalLimiter = PartitionedRateLimiter.CreateChained(globalLimiter);
 
-            options.AddPolicy(RateLimitPolicy.Sliding, httpContext =>
+            options.AddPolicy(RateLimitPolicy.User, httpContext =>
             {
-                var identityName = httpContext.User.Identity?.Name ?? RateLimitPolicy.Anonymous;
-                var isAdmin      = httpContext.User.IsInRole("Admin");
+                var identityName = httpContext.User.Identity is { IsAuthenticated: true }
+                    ? httpContext.User.Identity?.Name ?? throw new Exception("The user identity name must be required.")
+                    : RateLimitPolicy.Anonymous;
+                var isAdmin = httpContext.User.IsInRole("Admin");
 
                 return identityName switch
                 {

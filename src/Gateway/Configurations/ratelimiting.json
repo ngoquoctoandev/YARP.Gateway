@@ -15,7 +15,7 @@
     "UserPolicy": [
       {
         "Name": "Anonymous",
-        "PermitLimit": 20,
+        "PermitLimit": 1,
         "QueueLimit": 0,
         "Window": 60,
         "SegmentsPerWindow": 2,
@@ -23,7 +23,7 @@
       },
       {
         "Name": "Registered",
-        "PermitLimit": 10,
+        "PermitLimit": 5,
         "QueueLimit": 5,
         "Window": 60,
         "SegmentsPerWindow": 2,

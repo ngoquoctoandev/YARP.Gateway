@@ -31,7 +31,7 @@ public static class Extensions
             options.AddPolicy("ApiScope", policy =>
             {
                 policy.RequireAuthenticatedUser();
-                //policy.RequireClaim("scope", "yarp-gateway");
+                //policy.RequireClaim("permission", "yarp-gateway");
             });
         });
 
