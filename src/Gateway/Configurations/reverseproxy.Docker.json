@@ -12,7 +12,7 @@
       },
       "OccultismApiRoute": {
         "ClusterId": "OccultismApi",
-        "RateLimiterPolicy": "Sliding",
+        "RateLimiterPolicy": "User",
         "AuthorizationPolicy": "ApiScope",
         "CorsPolicy": "CorsPolicy",
         "Match": {
