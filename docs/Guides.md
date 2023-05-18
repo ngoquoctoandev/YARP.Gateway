@@ -5,4 +5,4 @@ docker build --no-cache --pull -f ./docker/Dockerfile -t yarpgateway:latest .
 docker build --no-cache --pull -t yarpgateway:latest .
 
 ## Lệnh tạo 1 container để chạy trong docker
-docker run --name yarpgateway -p 443:7979 -p 80:8989 --restart always -d yarpgateway
+docker run --name yarpgateway -p 443:7979 -p 80:8989 --network fullstackhero --restart always -d yarpgateway
