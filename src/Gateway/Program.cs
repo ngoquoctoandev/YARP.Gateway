@@ -11,13 +11,14 @@ try
     builder.AddConfigurations().RegisterSerilog().ConfigureWebHost();
     builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
     builder.Services.AddRateLimiting(builder.Configuration).AddCorsPolicy(builder.Configuration);
-    builder.Services.AddHealthChecks().AddCheck<ReverseProxyHealthCheck>("ReverseProxyHealthCheck");
+    builder.Services.AddHealthChecks().AddCheck<ReverseProxyHealthCheck>(nameof(ReverseProxyHealthCheck));
     builder.Services.AddAuth(builder.Configuration);
 
     var app = builder.Build();
 
     app.UseEndpoints();
-    app.UseRouting()
+    app.UseSerilogRequestLogging()
+        .UseRouting()
         .UseAuth()
         .UseRateLimiter()
         .UseCorsPolicy();

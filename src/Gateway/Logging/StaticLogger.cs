@@ -12,6 +12,6 @@ public static class StaticLogger
                 .Enrich.WithExceptionDetails()
                 .WriteTo.Console()
                 .WriteTo.Seq("http://localhost:5341/")
-                .CreateLogger();
+                .CreateBootstrapLogger();
     }
 }

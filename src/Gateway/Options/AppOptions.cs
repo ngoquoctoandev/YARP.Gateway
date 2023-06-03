@@ -2,5 +2,5 @@
 
 public class AppOptions : IOptionsRoot
 {
-    [Required(AllowEmptyStrings = false)] public string Name { get; set; } = "YARP.Gateway";
+    [Required(AllowEmptyStrings = false)] public string Name { get; set; } = default!;
 }
